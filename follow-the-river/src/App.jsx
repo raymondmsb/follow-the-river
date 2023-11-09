@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
@@ -10,7 +9,7 @@ import Results from "./pages/Results";
 function App() {
   const router = createHashRouter([
     {
-      path: "home",
+      path: "",
       element: <Home />
     },
     {
