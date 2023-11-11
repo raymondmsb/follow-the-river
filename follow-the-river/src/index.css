@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+a {
+  color: black;
+}
+
 header {
   margin-left: auto;
   margin-right: auto;
@@ -52,7 +56,7 @@ header {
   max-width: 360px;
 }
 
-#hiddenH1 {
+.hiddenH1 {
   position: absolute; left: -999em; 
 }
 

@@ -13,9 +13,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
-import { autocompleteClasses } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -26,7 +24,7 @@ const Home = () => {
     </Helmet>
     <header>
       <img id="header" src={ logo } alt="Follow the River App"/>
-      <h1 id="hiddenH1" >Follow the River App</h1>
+      <h1 class="hiddenH1" >Follow the River App</h1>
       <div id="subHead">
         <Typography variant="subtitle1" gutterBottom id="center">
           The companion app for Up & Down the River
@@ -36,7 +34,7 @@ const Home = () => {
     <main>
       <Box sx={{ width: '80%', maxWidth: 360, marginLeft: 'auto', marginRight: 'auto',}}>
         <List>
-          <ListItem disablePadding sx={{ mt: 8 }}>
+          <ListItem disablePadding sx={{ mt: 8 }} component={Link} to="/gameSetup">
             <ListItemButton divider sx={{borderBottomColor: '#520556',}}>
               <ListItemText primary="New Game" />
               <ListItemIcon>
@@ -44,7 +42,7 @@ const Home = () => {
               </ListItemIcon>
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ mt: 8 }}>
+          <ListItem disablePadding sx={{ mt: 8 }} component={Link} to="/howToPlay">
             <ListItemButton divider  sx={{borderBottomColor: '#520556',}}>
               <ListItemText primary="How To Play" />
               <ListItemIcon>
