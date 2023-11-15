@@ -75,3 +75,9 @@ header {
   margin-bottom: 0;
 }
 
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+

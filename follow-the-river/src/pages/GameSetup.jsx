@@ -9,7 +9,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
+import PlayersManager from '../PlayersManager';
 
 const GameSetup = () => {
   return (
@@ -32,9 +32,10 @@ const GameSetup = () => {
     </header>
     <main>
       <section>
-        <Typography variant="h2" sx={{ width: '100%', textAlign: 'center', color:'#520556', mt: 8 }}>
+        <Typography variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8, color:'#520556' }}>
           Players
         </Typography>
+        <PlayersManager />
       </section>
       <section>
         <Typography variant="h2" sx={{ width: '100%', textAlign: 'center', color:'#520556', mt: 8 }}>
