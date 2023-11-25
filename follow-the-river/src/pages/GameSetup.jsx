@@ -9,9 +9,30 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import PlayersManager from '../PlayersManager';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import { ListItem } from '@mui/material';
+import List from '@mui/material/List';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { PlayersProvider, usePlayersContext } from '../PlayersManager';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#520556',
+    },
+    secondary: {
+      main: '#FF9900',
+    },
+  },
+});
 
 const GameSetup = () => {
+  const { players, addPlayer, nameChange, removePlayer } = usePlayersContext();
   return (
     <>
     <Helmet>
@@ -31,17 +52,66 @@ const GameSetup = () => {
       </div>
     </header>
     <main>
-      <section>
-        <Typography variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8, color:'#520556' }}>
-          Players
-        </Typography>
-        <PlayersManager />
-      </section>
-      <section>
-        <Typography variant="h2" sx={{ width: '100%', textAlign: 'center', color:'#520556', mt: 8 }}>
-          Game
-        </Typography>
-      </section>
+      <ThemeProvider theme={theme}>
+      <form>
+        <section>
+          <Typography color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8 }}>
+            Players
+          </Typography>
+          <List>
+            {players.map((player)=>(
+              <ListItem key={ player.id } sx={{ justifyContent:'center' }}>
+                <TextField id="standard-basic" label={player.playerName} variant="standard" onChange={(e) => nameChange(player.playerName, e.target.value)}/>
+                <IconButton aria-label="delete" onClick={() => removePlayer(player.playerName)}>
+                  <RemoveCircleIcon color='error' />
+                </IconButton>
+              </ListItem>
+            ))}
+          </List>
+          <Button variant="outlined" color="success" onClick={() => addPlayer(`Player ${players.length + 1}`)} sx={{ marginLeft: "auto", marginRight: "auto" }}>Add Player</Button>
+        </section>
+        <section>
+          <Typography color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8 }}>
+            Game
+          </Typography>
+          <FormControl sx={{ minWidth: 182, mt: 4 }}>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Highest Card Count
+            </InputLabel>
+            <NativeSelect
+              defaultValue={5}
+              inputProps={{
+                name: 'highest-card-count',
+                id: 'uncontrolled-native',
+              }}
+            >
+              <option value={3}>Three</option>
+              <option value={5}>Five</option>
+              <option value={10}>Ten</option>
+            </NativeSelect>
+        </FormControl>
+        <FormControl sx={{ minWidth: 182, mt: 4 }}>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              First Dealer
+            </InputLabel>
+            <NativeSelect
+              defaultValue={5}
+              inputProps={{
+                name: 'first-dealer',
+                id: 'uncontrolled-native',
+              }}
+            >
+              {players.map((player)=>(
+                <option key={ player.id }>
+                  {player.playerName}
+                </option>
+              ))}
+            </NativeSelect>
+        </FormControl>
+        </section>
+        <Button color="primary" variant="contained" sx={{ my: 4 }}>START GAME</Button>
+      </form>
+      </ThemeProvider>
     </main>
     </>
   );
