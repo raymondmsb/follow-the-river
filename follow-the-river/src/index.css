@@ -52,14 +52,18 @@ header {
   padding-bottom: 0;
 }
 
-#header {
-  max-width: 360px;
+.MuiDataGrid-footerContainer {
+  display: none !important;
 }
 
-form {
+main, form {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+#header {
+  max-width: 360px;
 }
 
 .hiddenH1 {

@@ -25,10 +25,20 @@ export const usePlayersContext = () => {
 export const PlayersProvider = ({ children }) => {
   const [players, setPlayers] = useState([
     {
-      id: '1',
+      id: 364831,
       playerName: 'Player 1',
+      dealer: true,
     },
   ]);
+
+  const setDealer = (selectedPlayerId) => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        dealer: player.id === selectedPlayerId,
+      }))
+    );
+  };
 
   const addPlayer = (newPlayerName) => {
     setPlayers(prevPlayers => [
@@ -50,7 +60,7 @@ export const PlayersProvider = ({ children }) => {
 
 
   return (
-    <PlayersContext.Provider value={{ players, addPlayer, removePlayer, nameChange }}>
+    <PlayersContext.Provider value={{ players, addPlayer, removePlayer, nameChange, setDealer }}>
       {children}
     </PlayersContext.Provider>
   )

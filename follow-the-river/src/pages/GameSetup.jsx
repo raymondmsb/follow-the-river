@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import { ListItem } from '@mui/material';
 import List from '@mui/material/List';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { PlayersProvider, usePlayersContext } from '../PlayersManager';
+import { usePlayersContext } from '../PlayersManager';
 
 const theme = createTheme({
   palette: {
@@ -32,7 +32,12 @@ const theme = createTheme({
 });
 
 const GameSetup = () => {
-  const { players, addPlayer, nameChange, removePlayer } = usePlayersContext();
+  const { players, addPlayer, nameChange, removePlayer, setDealer } = usePlayersContext();
+
+  const handleChange = (event) => {
+    const firstDealerId = event.target.value;
+    setDealer(firstDealerId);
+  }
   return (
     <>
     <Helmet>
@@ -44,7 +49,7 @@ const GameSetup = () => {
       <ArrowBackIosIcon />
     </IconButton>
       <img id="header" src={ logo } alt="Follow the River App"/>
-      <h1 class="hiddenH1" >Game Set Up</h1>
+      <h1 className="hiddenH1" >Game Set Up</h1>
       <div id="subHead">
         <Typography variant="subtitle1" gutterBottom id="center">
           The companion app for Up & Down the River
@@ -53,7 +58,6 @@ const GameSetup = () => {
     </header>
     <main>
       <ThemeProvider theme={theme}>
-      <form>
         <section>
           <Typography color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8 }}>
             Players
@@ -95,22 +99,21 @@ const GameSetup = () => {
               First Dealer
             </InputLabel>
             <NativeSelect
-              defaultValue={5}
+              onChange={handleChange}
               inputProps={{
-                name: 'first-dealer',
+                name: 'firstDealer',
                 id: 'uncontrolled-native',
               }}
             >
               {players.map((player)=>(
-                <option key={ player.id }>
+                <option key={ player.id } value={ player.id }>
                   {player.playerName}
                 </option>
               ))}
             </NativeSelect>
         </FormControl>
         </section>
-        <Button color="primary" variant="contained" sx={{ my: 4 }}>START GAME</Button>
-      </form>
+        <Button href="/#/game" color="primary" variant="contained" sx={{ my: 4 }}>START GAME</Button>
       </ThemeProvider>
     </main>
     </>
