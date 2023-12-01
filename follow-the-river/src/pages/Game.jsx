@@ -134,11 +134,12 @@ const Game = () => {
         tempPlayers[currentDealerIndex].dealer = false;
         let newDealerIndex = (currentDealerIndex + 1) % tempPlayers.length;
         tempPlayers[newDealerIndex].dealer = true;
+        let newScore = 0;
+
 
         // Update scores based on the bids
         const updatedPlayers = tempPlayers.map((player) => {
           const rowData = rows.find((row) => row.id === player.id);
-          console.log('Row Data for Player ID:', player.id, rowData);
 
         
           if (!rowData) {
@@ -147,10 +148,16 @@ const Game = () => {
           }
         
           // Update the score by adding the bid points
+          console.log("Player: " + player.playerName + " won-value:" + rowData.won);
+          if (rowData.won) {
+            newScore = player.score + 10 + rowData.bid;
+          } else {
+            newScore = player.score;
+          }
 
           return {
             ...player,
-            score: player.score + rowData.bid,
+            score: newScore,
           };
         });
 
