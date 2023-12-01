@@ -23,6 +23,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import Badge from '@mui/material/Badge';
 import { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
+import { useCardCountContext } from './GameSetup';
+import { useContext } from 'react';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+
 
 
 const theme = createTheme({
@@ -36,28 +41,42 @@ const theme = createTheme({
   },
 });
 
+let done = false;
+
+
 const Game = () => { 
-  const { players } = usePlayersContext();
+  const { cardCount, handleCardCountChange } = useContext(useCardCountContext);
+
+  const { players, setDealer, undoDealer, updatePlayers } = usePlayersContext();
+
+  const initialRows = players.map((player) => ({
+    id: player.id,
+    name: player.playerName,
+    bid: 0,
+    won: false, 
+    dealer: player.dealer,
+  }));
 
   let [round, setRound] = useState(1);
     
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    const initialRows = players.map((player) => ({
-      id: player.id,
-      name: player.playerName,
-      bid: 0,
-      won: false, 
-      dealer: player.dealer,
-    }));
-
     setRows(initialRows);
   }, [players]);
+  
+  
 
   const handleCheckboxChange = (params) => {
     const updatedRows = rows.map((row) =>
       row.id === params.id ? { ...row, won: !row.won } : row
+    );
+    setRows(updatedRows);
+  };
+
+  const handleBidChange = (params, event) => {
+    const updatedRows = rows.map((row) =>
+      row.id === params.id ? { ...row, bid: parseInt(event.target.value) || 0 } : row
     );
     setRows(updatedRows);
   };
@@ -75,7 +94,17 @@ const Game = () => {
         )}
       </>
     ) },
-    { field: 'bid', headerName: 'Bid Amount', width: 150 },
+    { field: 'bid', headerName: 'Bid Amount', width: 150, editable: true, align: "center", headerAlign: "center", renderCell: (params) => (
+      <>
+      <IconButton onClick={() => handleBidChange(params, { target: { value: params.value - 1 } })}>
+        <RemoveIcon />
+      </IconButton>
+      <span>{params.value}</span>
+      <IconButton onClick={() => handleBidChange(params, { target: { value: params.value + 1 } })}>
+        <AddIcon />
+      </IconButton>
+      </>
+    ),},
     { field: 'won', headerName: 'Won?', width: 150, renderCell: (params) => (
       <Checkbox
         checked={params.value}
@@ -85,11 +114,57 @@ const Game = () => {
       />
     ), },
   ];
+
+  const removeDealer = (prevPlayers) => {
+      prevPlayers.map((player) => ({
+        ...player,
+        dealer: false,
+      }))
+  };
  
-  const nextRound = (value) => {
-    console.log(round);
-    setRound(round++);
-    console.log(round);
+  const nextRound = (event) => {
+    event.preventDefault();
+    if (round === ((cardCount * 2)-1)) {
+      done = true;
+    }
+    setRound((prevRound) => {
+      if (!done) {
+        let currentDealerIndex = players.findIndex((player) => player.dealer);
+        const tempPlayers = [...players];
+        tempPlayers[currentDealerIndex].dealer = false;
+        let newDealerIndex = (currentDealerIndex + 1) % tempPlayers.length;
+        tempPlayers[newDealerIndex].dealer = true;
+
+        // Update scores based on the bids
+        const updatedPlayers = tempPlayers.map((player) => {
+          const rowData = rows.find((row) => row.id === player.id);
+          console.log('Row Data for Player ID:', player.id, rowData);
+
+        
+          if (!rowData) {
+            console.error(`No row data found for player with id ${player.id}`);
+            return player;
+          }
+        
+          // Update the score by adding the bid points
+
+          return {
+            ...player,
+            score: player.score + rowData.bid,
+          };
+        });
+
+        console.log('Updated Scores:', updatedPlayers.map(player => ({ id: player.id, score: player.score })));
+        
+
+      // Update scores in the context
+        updatePlayers(updatedPlayers);
+
+        return prevRound + 1;
+      } else {
+        console.log("All done");
+      }
+    });
   }
   
   return (
@@ -129,11 +204,6 @@ const Game = () => {
       <section>
         <Typography color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8 }}>
           Leaderboard
-        </Typography>
-      </section>
-      <section>
-        <Typography color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8 }}>
-          Total
         </Typography>
       </section>
     </ThemeProvider>

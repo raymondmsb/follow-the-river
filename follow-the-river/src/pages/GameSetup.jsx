@@ -19,6 +19,8 @@ import { ListItem } from '@mui/material';
 import List from '@mui/material/List';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { usePlayersContext } from '../PlayersManager';
+import { createContext, useContext } from 'react';
+import { useState } from "react";
 
 const theme = createTheme({
   palette: {
@@ -31,13 +33,32 @@ const theme = createTheme({
   },
 });
 
+export const useCardCountContext = createContext();
+
+export const CardCountProvider = ({ children }) => {
+  const [cardCount, setCardCount] = useState(5); 
+
+  const handleCardCountChange = (event) => {
+    setCardCount(event.target.value);
+  };
+
+  return (
+    <useCardCountContext.Provider value={{ cardCount, handleCardCountChange }}>
+      {children}
+    </useCardCountContext.Provider>
+  );
+};
+
+
 const GameSetup = () => {
   const { players, addPlayer, nameChange, removePlayer, setDealer } = usePlayersContext();
+  const { cardCount, handleCardCountChange } = useContext(useCardCountContext);
 
   const handleChange = (event) => {
     const firstDealerId = event.target.value;
     setDealer(firstDealerId);
   }
+
   return (
     <>
     <Helmet>
@@ -83,6 +104,7 @@ const GameSetup = () => {
               Highest Card Count
             </InputLabel>
             <NativeSelect
+              onChange={handleCardCountChange}
               defaultValue={5}
               inputProps={{
                 name: 'highest-card-count',

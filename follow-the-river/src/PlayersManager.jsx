@@ -28,6 +28,7 @@ export const PlayersProvider = ({ children }) => {
       id: 364831,
       playerName: 'Player 1',
       dealer: true,
+      score: 0,
     },
   ]);
 
@@ -40,12 +41,26 @@ export const PlayersProvider = ({ children }) => {
     );
   };
 
+  const undoDealer = () => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        dealer: false,
+      }))
+    );
+    console.log("All players' dealer set to false");
+  };
+  
+  
+
   const addPlayer = (newPlayerName) => {
     setPlayers(prevPlayers => [
       ...prevPlayers,
       {
         id: randomID(),
-        playerName: newPlayerName
+        playerName: newPlayerName, 
+        dealer: false,
+        score: 0,
       }
     ]);
   };
@@ -58,9 +73,17 @@ export const PlayersProvider = ({ children }) => {
     setPlayers(players.map((player) => (player.playerName == oldName ? { ...player, playerName: newName } : player)));
   }
 
+  const updatePlayers = (newPlayers) => {
+    setPlayers((prevPlayers) => {
+      // Perform any additional operations or validations if needed
+      return newPlayers;
+    });
+  };
+  
+
 
   return (
-    <PlayersContext.Provider value={{ players, addPlayer, removePlayer, nameChange, setDealer }}>
+    <PlayersContext.Provider value={{ players, addPlayer, removePlayer, nameChange, setDealer, undoDealer, updatePlayers }}>
       {children}
     </PlayersContext.Provider>
   )
