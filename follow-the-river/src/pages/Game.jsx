@@ -9,15 +9,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import NativeSelect from '@mui/material/NativeSelect';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import { ListItem } from '@mui/material';
-import List from '@mui/material/List';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { usePlayersContext } from '../PlayersManager';
 import { DataGrid } from '@mui/x-data-grid';
 import Badge from '@mui/material/Badge';
@@ -57,9 +50,21 @@ const Game = () => {
     dealer: player.dealer,
   }));
 
+  const initialLeaderboardRows = players.map((player) => ({
+    id: player.id,
+    name: player.playerName, 
+    score: 0
+  }));
+
   let [round, setRound] = useState(1);
     
   const [rows, setRows] = useState([]);
+
+  const [leaderboardRows, setLeaderboardRows] = useState([]);
+
+  useEffect(() => {
+    setLeaderboardRows(initialLeaderboardRows);
+  }, []);
 
   useEffect(() => {
     setRows(initialRows);
@@ -80,7 +85,11 @@ const Game = () => {
     );
     setRows(updatedRows);
   };
-  
+
+  const leaderboardColumns = [
+    { field: 'name', headerName: 'Player', width: 150, },
+    { field: 'score', headerName: 'Points', width: 150, },
+  ];
 
   const columns = [
     { field: 'name', headerName: 'Player', width: 150, renderCell: (params) => (
@@ -124,53 +133,53 @@ const Game = () => {
  
   const nextRound = (event) => {
     event.preventDefault();
-    if (round === ((cardCount * 2)-1)) {
+    if (round === ((cardCount * 2)-2)) {
       done = true;
     }
     setRound((prevRound) => {
-      if (!done) {
-        let currentDealerIndex = players.findIndex((player) => player.dealer);
-        const tempPlayers = [...players];
-        tempPlayers[currentDealerIndex].dealer = false;
-        let newDealerIndex = (currentDealerIndex + 1) % tempPlayers.length;
-        tempPlayers[newDealerIndex].dealer = true;
-        let newScore = 0;
+      let currentDealerIndex = players.findIndex((player) => player.dealer);
+      const tempPlayers = [...players];
+      tempPlayers[currentDealerIndex].dealer = false;
+      let newDealerIndex = (currentDealerIndex + 1) % tempPlayers.length;
+      tempPlayers[newDealerIndex].dealer = true;
+      let newScore = 0;
 
 
-        // Update scores based on the bids
-        const updatedPlayers = tempPlayers.map((player) => {
-          const rowData = rows.find((row) => row.id === player.id);
+      // Update scores based on the bids
+      const updatedPlayers = tempPlayers.map((player) => {
+        const rowData = rows.find((row) => row.id === player.id);
 
-        
-          if (!rowData) {
-            console.error(`No row data found for player with id ${player.id}`);
-            return player;
-          }
-        
-          // Update the score by adding the bid points
-          console.log("Player: " + player.playerName + " won-value:" + rowData.won);
-          if (rowData.won) {
-            newScore = player.score + 10 + rowData.bid;
-          } else {
-            newScore = player.score;
-          }
+      
+        if (!rowData) {
+          console.error(`No row data found for player with id ${player.id}`);
+          return player;
+        }
+      
+        // Update the score by adding the bid points
+        if (rowData.won) {
+          newScore = player.score + 10 + rowData.bid;
+        } else {
+          newScore = player.score;
+        }
 
-          return {
-            ...player,
-            score: newScore,
-          };
-        });
+        return {
+          ...player,
+          score: newScore,
+        };
+      });
 
-        console.log('Updated Scores:', updatedPlayers.map(player => ({ id: player.id, score: player.score })));
-        
+      const newLeaderboardRows = updatedPlayers.map((player) => ({
+        id: player.id,
+        name: player.playerName, 
+        score: player.score
+      }));
 
-      // Update scores in the context
-        updatePlayers(updatedPlayers);
+      setLeaderboardRows(newLeaderboardRows);
 
-        return prevRound + 1;
-      } else {
-        console.log("All done");
-      }
+    // Update scores in the context
+      updatePlayers(updatedPlayers);
+
+      return prevRound + 1;
     });
   }
   
@@ -205,13 +214,26 @@ const Game = () => {
             columns={columns}
           />
           </div>
-          <Button color="primary" type="submit" variant="contained" sx={{ my: 4 }}>Next Round</Button>
+          <Button id="nextButton" color="primary" type="submit" variant="contained" style={{ display: done ? 'none' : 'block' }} sx={{ my: 4 }}>Next Round</Button>
+          <Button component={Link} to="/results" id="endButton" color="primary" type="submit" variant="contained" style={{ display: done ? 'block' : 'none' }} sx={{ my: 4 }}>Finish Game</Button>
         </form>
       </section>
       <section>
         <Typography color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', mt: 8 }}>
           Leaderboard
         </Typography>
+        <div style={{ height: '100%', width: '360px' }}>
+          <DataGrid  sx={{my: 4}}
+            rows={leaderboardRows}
+            columns={leaderboardColumns}
+            sortModel={[
+              {
+                field: 'score',
+                sort: 'desc', 
+              },
+            ]}
+          />
+          </div>
       </section>
     </ThemeProvider>
     </main>

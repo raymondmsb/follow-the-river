@@ -135,7 +135,7 @@ const GameSetup = () => {
             </NativeSelect>
         </FormControl>
         </section>
-        <Button href="/#/game" color="primary" variant="contained" sx={{ my: 4 }}>START GAME</Button>
+        <Button component={Link} to="/game" color="primary" variant="contained" sx={{ my: 4 }}>START GAME</Button>
       </ThemeProvider>
     </main>
     </>
