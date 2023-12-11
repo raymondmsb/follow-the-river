@@ -50,8 +50,8 @@ const Home = () => {
               </ListItemIcon>
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ mt: 8 }} component={Link} to="/stats">
-            <ListItemButton divider  sx={{borderBottomColor: '#520556',}}>
+          <ListItem disablePadding sx={{ mt: 8 }} /*component={Link} to="/stats"*/>
+            <ListItemButton disabled divider  sx={{borderBottomColor: '#520556',}}>
               <ListItemText primary="My Statistics" />
               <ListItemIcon>
                 <ArrowForwardIosIcon  sx={{color: '#FF9900',}} />
