@@ -5,6 +5,7 @@ import Game from "./pages/Game";
 import GameSetup from "./pages/GameSetup";
 import HowToPlay from "./pages/HowToPlay";
 import Results from "./pages/Results";
+import Stats from "./pages/Stats";
 
 function App() {
   const router = createHashRouter([
@@ -27,6 +28,10 @@ function App() {
     {
       path: "results",
       element: <Results />
+    },
+    {
+      path: "stats",
+      element: <Stats />
     }
   ]);
   return (
