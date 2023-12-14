@@ -16,6 +16,10 @@ import '@fontsource/roboto/700.css';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
+import { Link as navLink } from 'react-router-dom';
+import Button from '@mui/material/Button';
 
 const theme = createTheme({
   palette: {
@@ -36,6 +40,9 @@ const HowToPlay = () => {
       <meta name="viewport" content="initial-scale=1, width=device-width" />
     </Helmet>
     <header>
+      <IconButton aria-label="go back" sx={{color: '#FF9900', position: 'absolute', transform:'translateY(50%) translateX(50%)',}} component={navLink} to="/">
+        <ArrowBackIosIcon />
+      </IconButton>
       <img id="header" src={ logo } alt="Follow the River App"/>
       <h1 class="hiddenH1" >Follow the River App</h1>
       <div id="subHead">
@@ -45,7 +52,7 @@ const HowToPlay = () => {
       </div>
     </header>
     <main>
-      <List>
+      <List id="menu">
         <ListItem sx={{ justifyContent: "center" }}>
           <Link underline="hover" href="#rules">
             <ScrollLink
@@ -178,7 +185,74 @@ const HowToPlay = () => {
       <Typography id="rules" color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', my: 3 }}>
         Rules
       </Typography>
+      <Typography variant="h6" gutterBottom sx={{ alignSelf: 'flex-start', mt: 3 }}>
+        The Up and Down the River rules are:
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      1. The first dealer is determined
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      2. Each player is dealt a number of cards based on the current round requirements, the remaining cards are set aside and the top card is revealed, determining the trump suit.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      3. Each player makes a bid on how many tricks they can win for the round, beginning with the player to the left of the dealer and rotating in clockwise order. The bids are recorded in the game table.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      4. The trick-taking process then begins, with the player to the left of the dealer leading the first trick, with the turn order rotating in clockwise order.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      5. The player winning the trick leads the next trick.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      6. Once all tricks per round are played, the tricks are counted and compared with the initial bids. Check the boxes under the "won" column for each player who won their bid.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      7. The next round proceeds until all rounds are played.
+      </Typography>
+      <Typography id="scoring" color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', my: 3 }}>
+        Scoring and Points
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      Up and Down the River scoring is done based on the bidding process and the number of tricks won in each round.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      If a player satisfies their initial bid exactly, they are awarded 10 points plus the number of their bid.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      The initial bids must be met to receive points. This means a player who bids 7 but takes 8 tricks will not win any points.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      If a player bids 0 and takes 0 tricks, they still get 10 points for “losing” the round.
+      </Typography>
+      <Typography id="tips" color="primary" variant="h2" sx={{ width: '100%', textAlign: 'center', my: 3 }}>
+        Strategy and Tips
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      In Up and Down the River card game strategy, the most important part is the bidding process.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      Don’t be afraid to bid 0, even on rounds with many cards per player. This changes the game style, where you are deliberately trying to lose.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      Count cards on high-card count rounds. While there are still unveiled cards, you can get a feel for other players’ hands.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      Remember that you can deliberately force a player to take a trick if they are at their bid amount.
+      </Typography>
+      <Typography variant="body1" gutterBottom sx={{ maxWidth: 310 }}>
+      Don't worry too much about taking as many tricks as possible. Guessing your bid accurately is what's important.
+      </Typography>
       </div>
+      <ScrollLink
+        style={{ color: "#3f51bf" }}
+        underline="hover"
+        to="menu"
+        spy={true}
+        smooth={true}
+        duration={500}
+      >
+        <Button sx={{ my: 5 }} variant="contained">Back to Top</Button>
+      </ScrollLink>
     </ThemeProvider>
     </main>
     </>
