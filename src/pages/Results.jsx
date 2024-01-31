@@ -15,6 +15,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useEffect } from 'react';
 import { Helmet } from "react-helmet";
 import Confetti from 'react-confetti';
+import { updatedPlayers } from './Game';
 
 const theme = createTheme({
   palette: {
@@ -30,6 +31,7 @@ const theme = createTheme({
 const Results = () => {
 
   const { players } = usePlayersContext();
+  //const players = updatedPlayers;
 
   const columns = [
     { field: 'name', headerName: "Player", width: 150, },

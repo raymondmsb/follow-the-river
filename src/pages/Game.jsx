@@ -18,10 +18,10 @@ import { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import { useCardCountContext } from './GameSetup';
 import { useContext } from 'react';
+import { createContext } from 'react';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-
-
+import { useNavigate } from 'react-router-dom';
 
 
 const theme = createTheme({
@@ -37,11 +37,14 @@ const theme = createTheme({
 
 let done = false;
 
+let updatedPlayers = [];
 
 const Game = () => { 
   const { cardCount, handleCardCountChange } = useContext(useCardCountContext);
 
   const { players, setDealer, undoDealer, updatePlayers } = usePlayersContext();
+
+  const navigate = useNavigate();
 
   const initialRows = players.map((player) => ({
     id: player.id,
@@ -145,9 +148,9 @@ const Game = () => {
       tempPlayers[newDealerIndex].dealer = true;
       let newScore = 0;
 
-
+      console.log("2: " + tempPlayers[0].score);
       // Update scores based on the bids
-      const updatedPlayers = tempPlayers.map((player) => {
+      updatedPlayers = tempPlayers.map((player) => {
         const rowData = rows.find((row) => row.id === player.id);
 
       
@@ -168,6 +171,7 @@ const Game = () => {
           score: newScore,
         };
       });
+      console.log("3: " + updatedPlayers[0].score);
 
       const newLeaderboardRows = updatedPlayers.map((player) => ({
         id: player.id,
@@ -178,10 +182,15 @@ const Game = () => {
       setLeaderboardRows(newLeaderboardRows);
 
     // Update scores in the context
+    console.log("4: " + updatedPlayers[0].score);
       updatePlayers(updatedPlayers);
 
       return prevRound + 1;
     });
+
+    if (round === (((cardCount * 2)-2)) + 1) {
+      navigate('/results');
+    }
   }
   
   return (
@@ -216,7 +225,7 @@ const Game = () => {
           />
           </div>
           <Button id="nextButton" color="primary" type="submit" variant="contained" style={{ display: done ? 'none' : 'block' }} sx={{ my: 4 }}>Next Round</Button>
-          <Button component={Link} to="/results" id="endButton" color="primary" type="submit" variant="contained" style={{ display: done ? 'block' : 'none' }} sx={{ my: 4 }}>Finish Game</Button>
+          <Button /*component={Link} to="/results"*/ id="endButton" color="primary" type="submit" variant="contained" style={{ display: done ? 'block' : 'none' }} sx={{ my: 4 }}>Finish Game</Button>
         </form>
       </section>
       <section>
@@ -241,5 +250,5 @@ const Game = () => {
     </>
   );
 }
-
+//export { updatedPlayers };
 export default Game;
